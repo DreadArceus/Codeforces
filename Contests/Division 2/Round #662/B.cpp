@@ -4,9 +4,9 @@
 #include <set>
 #include <string>
 using namespace std;
-bool possible(multiset<int> *us)
+bool possible(multiset<int> us)
 {
-  multiset<int> m(*us);
+  multiset<int> m(us);
   for(auto it : m)
   {
     bool foundSq = 0, foundRec1 = 0, foundRec2 = 0;
@@ -34,12 +34,12 @@ int main()
 {
   int n = 0;
   cin >> n;
-  multiset<int> *us = new multiset<int>;
+  multiset<int> us;
   for(int i = 0; i < n; i++)
   {
     int loc = 0;
     cin >> loc;
-    us->insert(loc);
+    us.insert(loc);
   }
   int q = 0;
   cin >> q;
@@ -50,11 +50,11 @@ int main()
     cin >> x >> i;
     if(x == '+')
     {
-      us->insert(i);
+      us.insert(i);
     }
     else
     {
-      us->erase(us->find(i));
+      us.erase(us.find(i));
     }
     if(possible(us))
     {
