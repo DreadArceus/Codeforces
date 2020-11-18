@@ -1,3 +1,4 @@
+//Editorial: needs segement trees... wow
 #include <iostream>
 #include <vector>
 using namespace std;

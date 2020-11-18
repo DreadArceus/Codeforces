@@ -1,3 +1,5 @@
+//Alot of mindgames in this one, just wow
+//Not doing this right now
 #include <iostream>
 #include <vector>
 #include <map>
