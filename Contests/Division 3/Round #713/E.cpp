@@ -1,54 +1,7 @@
 #include <iostream>
-#include <vector>
 #include <set>
-#include <cstring>
+#include <algorithm>
 using namespace std;
-
-int l = 0, r = 0;
-set<int> solve(vector<int> nums, int target)
-{
-    set<set<int> > dp[target + 1];
-    for (int i = 0; i <= target; i++)
-    {
-        dp[i] = set<set<int> >();
-    }
-    for (int j = 0; j < nums.size(); j++)
-    {
-        for (int i = 1; i <= target; i++)
-        {
-            set<set<int> > current = dp[i];
-            if (i == nums[j])
-            {
-                set<int> base;
-                base.insert(nums[j]);
-                current.insert(base);
-            }
-            else if (i > nums[j])
-            {
-                set<set<int> > old = dp[i - nums[j]];
-                set<set<int> >::iterator it = old.begin();
-                while (it != old.end())
-                {
-                    set<int> next = *it;
-                    next.insert(nums[j]);
-                    current.insert(next);
-                    it++;
-                }
-            }
-           dp[i] = current;
-        }
-    }
-    set<set<int> >::iterator it = dp[target].begin();
-    while (it != dp[target].end())
-    {
-        if (it->size() == r - l + 1)
-        {
-            return *it;
-        }
-        it++;
-    }
-    return set<int>();
-}
 
 int main()
 {
@@ -56,25 +9,75 @@ int main()
     cin >> t;
     while (t--)
     {
-
-        int n = 0, s = 0;
+        int n = 0, l = 0, r = 0, s = 0;
         cin >> n >> l >> r >> s;
-        vector<int> nums(n);
-        for (int i = 0; i < n; i++)
+
+        int size = r - l + 1;
+        int baseSum = (size * (size + 1)) / 2;
+        if (baseSum > s)
         {
-            nums[i] = i + 1;
-        }
-        set<int> ans = solve(nums, s);
-        if (ans.size() == 0)
-        {
-            cout << -1 << "\n";
+            cout << "-1\n";
             continue;
+        }
+
+        set<int> ans;
+        for (int i = 1; i <= size; i++)
+            ans.insert(i);
+        int maxElement = n;
+
+        while (baseSum < s)
+        {
+            int dif = s - baseSum;
+            set<int>::iterator minIt = min_element(ans.begin(), ans.end());
+            int minElement = *minIt;
+            if (dif < maxElement - minElement)
+                break;
+            baseSum += maxElement - minElement;
+            ans.erase(minIt);
+            ans.insert(maxElement);
+            maxElement--;
+            if (maxElement <= size)
+                break;
+        }
+
+        int dif = s - baseSum;
+        maxElement = n;
+        while (ans.find(maxElement) != ans.end())
+            maxElement--;
+        while (maxElement > size)
+        {
+            set<int>::iterator it = ans.find(maxElement - dif);
+            if (it != ans.end())
+            {
+                baseSum += maxElement - *it;
+                ans.erase(it);
+                ans.insert(maxElement);
+                break;
+            }
+            maxElement--;
+        }
+
+        if (baseSum != s)
+        {
+            cout << "-1\n";
+            continue;
+        }
+
+        int x = 1;
+        for (int i = 0; i < l - 1; i++)
+        {
+            while (ans.find(x) != ans.end())
+                x++;
+            cout << x++ << " ";
         }
         set<int>::iterator it = ans.begin();
         while (it != ans.end())
+            cout << *it++ << " ";
+        for (int i = r; i < n; i++)
         {
-            cout << *it << " ";
-            it++;
+            while (ans.find(x) != ans.end())
+                x++;
+            cout << x++ << " ";
         }
         cout << "\n";
     }
