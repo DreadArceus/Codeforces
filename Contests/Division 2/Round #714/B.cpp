@@ -5,16 +5,17 @@ using namespace std;
 
 unsigned long long fact(unsigned long long x)
 {
-    unsigned long long ans = x;
-    while (--x)
+    unsigned long long ans = 1;
+    for(unsigned long long i = 2; i <= x; i++)
     {
-        ans = (ans * x) % int(1e9 + 7);
+        ans = (ans * i) % int(1e9 + 7);
     }
     return ans;
 }
 
 int main()
 {
+    ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
     int t = 0;
     cin >> t;
     while (t--)
@@ -22,35 +23,25 @@ int main()
         int n = 0;
         cin >> n;
         vector<int> v(n);
-        map<int, int> m;
-        map<int, int> andMap;
         int totalAnd = 0;
         for (int i = 0; i < n; i++)
         {
             cin >> v[i];
-            m[v[i]]++;
             if (i == 0)
                 totalAnd = v[i];
             else
-            {
                 totalAnd &= v[i];
-                andMap[v[i] & v[i - 1]]++;
-            }
         }
-        if (andMap.size() > 1)
+        int cntZero = 0;
+        for (int i = 0; i < n; i++)
         {
-            cout << "0\n";
-            continue;
+            v[i] -= totalAnd;
+            if(v[i] == 0)
+                cntZero++;
         }
-        if (m.size() == 1)
+        if (cntZero > 1)
         {
-            cout << fact(n) % int(1e9 + 7) << "\n";
-            continue;
-        }
-        map<int, int>::iterator it = andMap.begin();
-        if (totalAnd == it->first && m[it->first] > 1)
-        {
-            cout << (fact(n - 2) * fact(m[it->first])) % int(1e9 + 7) << "\n";
+            cout << (fact(n - 2) * cntZero * (cntZero - 1)) % int(1e9 + 7) << "\n";
             continue;
         }
         cout << "0\n";
