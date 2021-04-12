@@ -7,12 +7,12 @@ int main()
     cin >> t;
     while(t--)
     {
-        double n = 0, k = 0;
+        long long n = 0, k = 0;
         cin >> n >> k;
         if(k < n)
         {
-            k *= ceil(n/k);
+            k *= (n+k-1)/k;
         }
-        cout << ceil(k/n) << "\n";
+        cout << (k+n-1)/n << "\n";
     }
 }

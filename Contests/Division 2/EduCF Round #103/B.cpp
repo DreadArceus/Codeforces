@@ -1,44 +1,34 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+
 using namespace std;
-int main()
+#define int long long
+
+int32_t main()
 {
     int t = 0;
     cin >> t;
-    while(t--)
+    while (t--)
     {
         int n = 0, k = 0;
         cin >> n >> k;
-        vector<double> p(n), prefix(n);
-        for(int i = 0; i < n; i++)
+        vector<int> p(n);
+        for (int i = 0; i < n; i++)
         {
             cin >> p[i];
-            if(i == 0)
-            {
-                prefix[i] = p[i];
-            }
-            else
-            {
-                prefix[i] = p[i] + prefix[i - 1];
-            }
         }
-        int max_ind = -1;
-        double max = 0;
-        for(int i = 1; i < n; i++)
+        int ans = 0;
+        int sum = p[0];
+        for (int i = 1; i < n; i++)
         {
-            double current = (100*p[i])/prefix[i-1];
-            if(current > k && current > max)
+            int current = (100 * p[i] + sum - 1) / sum;
+            if(current > k)
             {
-                max = current;
-                max_ind = i;
+                ans = max(ans, (100 * p[i] + k - 1) / k - sum);
             }
+            sum += p[i];
         }
-        int min = 0;
-        if(max_ind != -1)
-        {
-            min = ceil((100 * p[max_ind]) / k - prefix[max_ind - 1]);
-        }
-        cout << min << "\n";
+        cout << ans << "\n";
     }
 }
