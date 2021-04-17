@@ -12,63 +12,65 @@ using namespace std;
 void solveCase()
 {
     int n = 0;
-    string s1, s2, s3;
-    cin >> n >> s1 >> s2 >> s3;
-    vector<char> ans;
-    for (int i = 0; i < 2 * n; i++)
+    vector<string> s(3);
+    cin >> n >> s[0] >> s[1] >> s[2];
+    vector<vector<int>> counts(3, vector<int>(2, 0));
+    for (int i = 0; i < 3; i++)
     {
-        if (s1[i] == s2[i])
+        for (int j = 0; j < 2 * n; j++)
         {
-            ans.push_back(s1[i]);
-        }
-        else
-        {
-            ans.push_back(s1[i]);
-            ans.push_back(s2[i]);
+            if (s[i][j] == '0')
+                counts[i][0]++;
+            if (s[i][j] == '1')
+                counts[i][1]++;
         }
     }
-    if (ans.size() > 3 * n)
-    {
-        ans = vector<char>();
-        for (int i = 0; i < 2 * n; i++)
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
         {
-            if (s1[i] == s3[i])
+            if (i == j)
+                continue;
+            for (char c = '0'; c <= '1'; c++)
             {
-                ans.push_back(s1[i]);
-            }
-            else
-            {
-                ans.push_back(s1[i]);
-                ans.push_back(s3[i]);
+                if (min(counts[i][c - '0'], counts[j][c - '0']) < n)
+                    continue;
+                string ans;
+                int x = 0, y = 0;
+                while (x < 2 * n && y < 2 * n)
+                {
+                    if (s[i][x] == c && s[j][y] == c)
+                    {
+                        ans += c;
+                        x++;
+                        y++;
+                    }
+                    else
+                    {
+                        if(s[i][x] == s[j][y])
+                        {
+                            ans += s[i][x];
+                            x++;
+                            y++;
+                            continue;
+                        }
+                        if (s[i][x] != c)
+                        {
+                            ans += s[i][x++];
+                        }
+                        if (s[j][y] != c)
+                        {
+                            ans += s[j][y++];
+                        }
+                    }
+                }
+                while (x < 2 * n)
+                    ans += s[i][x++];
+                while (y < 2 * n)
+                    ans += s[j][y++];
+                cout << ans << "\n";
+                return;
             }
         }
-    }
-    if (ans.size() > 3 * n)
-    {
-        ans = vector<char>();
-        for (int i = 0; i < 2 * n; i++)
-        {
-            if (s2[i] == s3[i])
-            {
-                ans.push_back(s2[i]);
-            }
-            else
-            {
-                ans.push_back(s2[i]);
-                ans.push_back(s3[i]);
-            }
-        }
-    }
-    for (char bit : ans)
-    {
-        cout << bit - '0';
-    }
-    int remaining = 3 * n - ans.size();
-    while (remaining--)
-    {
-        cout << 0;
-    }
-    cout << "\n";
 }
 
 int32_t main()
