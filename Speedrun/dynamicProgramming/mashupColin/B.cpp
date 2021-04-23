@@ -22,19 +22,24 @@ void solveCase()
         c.insert(x);
     }
 
-    pair<int, int> dp[n + 2];
-    //returns pair(num of substrings, valid letters running count) state 1: n
+    int dp[n + 2];
+    //returns valid letters running count, state 1: n
 
-    dp[0] = make_pair(0, 0);
+    dp[0] = 0;
     for (int i = 0; i <= n; i++)
     {
         if (c.find(s[i]) == c.end())
-            dp[i + 1] = make_pair(dp[i].first, 0);
+            dp[i + 1] = 0;
         else
-            dp[i + 1] = make_pair(dp[i].first + dp[i].second + 1, dp[i].second + 1);
+            dp[i + 1] = dp[i] + 1;
     }
 
-    cout << dp[n].first;
+    int ans = 0;
+    for (int i = 0; i <= n; i++)
+    {
+        ans += dp[i];
+    }
+    cout << ans;
 }
 
 int32_t main()
