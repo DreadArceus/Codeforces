@@ -32,23 +32,23 @@ void solveCase()
         }
         juices[i] = make_pair(c, mask);
     }
-    int dp[1 << 3];
-    memset(dp, 0, sizeof(dp));
-    for (int i = 1; i <= 7; i++)
+
+    int dp[8]; //returns min cost, state 1: bitmask of vitamins
+    dp[0] = 0;
+    for (int i = 1; i < 8; i++)
+        dp[i] = INT32_MAX;
+
+    for (int i = 1; i < 8; i++)
     {
-        if (dp[i] == 0)
-            dp[i] = INT32_MAX;
-        for (int j = 0; j < n; j++)
-            if (dp[i] > juices[j].first && juices[j].second == i)
-                dp[i] = juices[j].first;
-        for (int j = i + 1; j < 1 << 3; j++)
-            if (j & i && (j | i) == j)
-                dp[j] += dp[i];
+        for (auto juice : juices)
+        {
+            if ((juice.second & i) == 0)
+                continue;
+            dp[i] = min(dp[i], dp[i - (juice.second & i)] + juice.first);
+        }
     }
-    dp[7] = min(min(min(dp[3] + dp[4], dp[2] + dp[5]), min(dp[1] + dp[6], dp[7])),
-                min(min(dp[3] + dp[5], dp[3] + dp[6]),
-                    min(dp[1] + dp[2] + dp[4], dp[5] + dp[6])));
-    if (dp[7] > 300000)
+
+    if (dp[7] == INT32_MAX)
         cout << -1;
     else
         cout << dp[7];
