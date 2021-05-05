@@ -33,27 +33,26 @@ void solveCase()
     int ans = 0;
     for (int j = 0; j < 26; j++)
     {
-        vector<string> vs;
-        string cur;
+        int totalCnt = 0, cnt = 0;
         for (int i = 0; i < n; i++)
         {
-            if (s[i] - 'a' != j && cur.size())
+            if (s[i] - 'a' != j && cnt)
             {
-                if (cur.size() == k)
-                    vs.push_back(cur);
-                cur.clear();
+                if (cnt == k)
+                    totalCnt++;
+                cnt = 0;
             }
             if (s[i] - 'a' == j)
             {
-                cur.push_back(s[i]);
-                if (cur.size() == k)
+                cnt++;
+                if (cnt == k)
                 {
-                    vs.push_back(cur);
-                    cur.clear();
+                    totalCnt++;
+                    cnt = 0;
                 }
             }
         }
-        ans = max(ans, (int)vs.size());
+        ans = max(ans, totalCnt);
     }
     cout << ans << "\n";
 }
