@@ -37,10 +37,8 @@ void solveCase()
         c[l % 3]++;
     if (cnt % 3 == 2)
         c[r % 3]++;
-    int ans = (c[1] * c[2] * 2) % mod;
-    if (c[0])
-        ans += (c[0] * (c[0] - 1) * 2) % mod + c[0];
-    cout << ans % mod << "\n";
+    // TODO : dp
+    cout << "\n";
 }
 
 int32_t main()
