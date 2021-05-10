@@ -33,49 +33,31 @@ void solveCase()
     initiateCase();
     cin >> n >> k >> m;
     v.resize(n);
+    long double sum = 0;
     for (int i = 0; i < n; i++)
+    {
         cin >> v[i];
+        sum += v[i];
+    }
     sort(v.begin(), v.end());
-    long double ans = 0;
     if (m >= n)
     {
-        v[n - 1] += min(m - n + 1, k);
-        ans = v[n - 1];
+        cout << v[n - 1] + min(m - n + 1, k);
+        return;
     }
-    else
+    long double ans = (sum + m) / n, leftSum = sum + m;
+    for (int i = 0; i < m; i++)
     {
-        int first1 = -1, first2 = -1;
-        for (int i = n - 1; i >= 0; i--)
-        {
-            if (v[n - 1] - v[i] > 0)
-                break;
-            first1 = i;
-        }
-        for (int i = first1; i >= 0; i--)
-        {
-            if (v[n - 1] - v[i] > 1)
-                break;
-            first2 = i;
-        }
-        int size = n - m;
-        if (m > first1)
-        {
-            v[n - 1] += m - first1;
-            size = n - first1;
-        }
-        else if (m > first2)
-        {
-            v[n - 1] += m - first2;
-            size = n - first2;
-        }
-        for (int i = n - 1; i >= n - size; i--)
-            ans += v[i] / (double)size;
+        leftSum -= v[i] + 1;
+        ans = max(ans, leftSum / (n - i - 1));
     }
     cout << setprecision(10) << ans;
 }
 
 int32_t main()
 {
-    ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
     solveCase();
 }
