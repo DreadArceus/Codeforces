@@ -1,4 +1,5 @@
 #include <iostream>
+#include <queue>
 #include <vector>
 #include <string>
 #include <map>
@@ -14,46 +15,47 @@ void solveCase()
 {
     int n = 0, m = 0, x = 0;
     cin >> n >> m >> x;
-    vector<pii> h(n, make_pair(0, -1));
+    vector<int> h(n);
+    priority_queue<pii> pq;
     for (int i = 0; i < n; i++)
     {
-        cin >> h[i].first;
-        h[i].second = i;
+        cin >> h[i];
+        pq.push(make_pair(h[i], i));
     }
-    sort(h.begin(), h.end());
-    int maxDistri = n / m;
-    vector<int> ans(n);
-    vector<pii> sum(m + 1, make_pair(0, -1));
-    for (int i = 1; i <= m; i++)
-        sum[i].second = i;
-    int cur = 0, stNum = 1, count = 0;
-    while (cur != n && stNum != m + 1)
+    vector<int> ans(n), sums(n, 0);
+    int i = 1;
+    bool f = true;
+    while (!pq.empty())
     {
-        if (count >= maxDistri)
+        pii cur = pq.top();
+        pq.pop();
+        ans[cur.second] = i;
+        sums[cur.second] += cur.first;
+        if (f)
+            i++;
+        else
+            i--;
+        if (i == m + 1)
         {
-            count = 0;
-            stNum++;
-            continue;
+            i = m;
+            f = !f;
         }
-        sum[stNum].first += h[cur].first;
-        ans[h[cur].second] = stNum;
-        cur++;
-        count++;
+        if (i == 0)
+        {
+            i = 1;
+            f = !f;
+        }
     }
-    if (stNum == m + 1)
+    int maxH = 0, minH = INT32_MAX;
+    for (int sum : sums)
     {
-        while (cur != n)
-        {
-            sort(sum.begin(), sum.end());
-            for (int i = 0; i < sum.size() && cur != n; i++)
-            {
-                if (sum[i].second == -1)
-                    continue;
-                sum[i].first += h[cur].first;
-                ans[h[cur].second] = sum[i].second;
-                cur++;
-            }
-        }
+        maxH = max(maxH, sum);
+        minH = min(minH, sum);
+    }
+    if(maxH - minH > x)
+    {
+        cout << "NO\n";
+        return;
     }
     cout << "YES\n";
     for (auto i : ans)
@@ -63,6 +65,7 @@ void solveCase()
 
 int32_t main()
 {
+    ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
     int t = 0;
     cin >> t;
     while (t--)
